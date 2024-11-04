@@ -1,0 +1,32 @@
+[project]
+name = "llm-lambda-labs"
+version = "0.1a0"
+description = "Run prompts against LLMs hosted by https://lambdalabs.com/"
+readme = "README.md"
+authors = [{name = "Simon Willison"}]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
+]
+requires-python = ">=3.9"
+dependencies = [
+    "llm",
+    "httpx",
+    "httpx-sse",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/simonw/llm-lambda-labs"
+Changelog = "https://github.com/simonw/llm-lambda-labs/releases"
+Issues = "https://github.com/simonw/llm-lambda-labs/issues"
+CI = "https://github.com/simonw/llm-lambda-labs/actions"
+
+[project.entry-points.llm]
+lambda_labs = "llm_lambda_labs"
+
+[project.optional-dependencies]
+test = ["pytest"]
