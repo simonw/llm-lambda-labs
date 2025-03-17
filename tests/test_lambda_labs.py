@@ -32,13 +32,15 @@ def test_plugin_is_installed(patched):
 
 
 @pytest.mark.vcr
-def test_prompt(patched):
+@pytest.mark.parametrize("stream", (True, False))
+def test_prompt(patched, stream):
     model = llm.get_model("lambdalabs/llama3.3-70b-instruct-fp8")
-    output = model.prompt("hi", stream=False).text()
-    assert (
-        output
-        == "It's nice to meet you. Is there something I can help you with or would you like to chat?"
-    )
+    response = model.prompt("Just replay with the word Cheese", stream=stream)
+    output = response.text()
+    assert output == "Cheese"
+    usage = response.usage()
+    assert usage.input == 41
+    assert usage.output == 3
 
 
 @pytest.mark.vcr
@@ -46,8 +48,12 @@ def test_prompt(patched):
 @pytest.mark.parametrize("stream", (True, False))
 async def test_async_prompt(patched, stream):
     model = llm.get_async_model("lambdalabs/llama3.3-70b-instruct-fp8")
-    output = await model.prompt("hi", stream=stream).text()
+    response = model.prompt("hi", stream=stream)
+    output = await response.text()
     assert (
         output
         == "How's it going? Is there something I can help you with or would you like to chat?"
     )
+    usage = await response.usage()
+    assert usage.input == 36
+    assert usage.output == 21

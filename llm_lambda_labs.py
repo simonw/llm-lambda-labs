@@ -135,6 +135,13 @@ class _SharedLambdaLabs:
             body["max_tokens"] = prompt.options.max_tokens
         return body
 
+    def set_usage(self, response, usage):
+        if usage:
+            response.set_usage(
+                input=usage["prompt_tokens"],
+                output=usage["completion_tokens"],
+            )
+
 
 class LambdaLabs(_SharedLambdaLabs, llm.Model):
     def execute(self, prompt, stream, response, conversation):
@@ -176,6 +183,7 @@ class LambdaLabs(_SharedLambdaLabs, llm.Model):
                     # Record last_not_done as response_json - it includes usage
                     if last_not_done:
                         last_not_done.pop("choices", None)
+                        self.set_usage(response, last_not_done.pop("usage", None))
                         response.response_json = last_not_done
         else:
             with httpx.Client() as client:
@@ -191,7 +199,9 @@ class LambdaLabs(_SharedLambdaLabs, llm.Model):
                 )
                 api_response.raise_for_status()
                 yield api_response.json()["choices"][0]["message"]["content"]
-                response.response_json = api_response.json()
+                details = api_response.json()
+                self.set_usage(response, details.pop("usage", None))
+                response.response_json = details
 
 
 class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncModel):
@@ -234,6 +244,7 @@ class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncModel):
                     # Record last_not_done as response_json - it includes usage
                     if last_not_done:
                         last_not_done.pop("choices", None)
+                        self.set_usage(response, last_not_done.pop("usage", None))
                         response.response_json = last_not_done
         else:
             async with httpx.AsyncClient() as client:
@@ -250,4 +261,5 @@ class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncModel):
                 api_response.raise_for_status()
                 response_json = api_response.json()
                 yield response_json["choices"][0]["message"]["content"]
+                self.set_usage(response, response_json.pop("usage", None))
                 response.response_json = response_json
