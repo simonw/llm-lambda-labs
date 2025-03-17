@@ -69,7 +69,7 @@ def register_commands(cli):
             click.echo(f"Removed models: {', '.join(removed)}", err=True)
         if added or removed:
             click.echo("New list of models:", err=True)
-            for model_id in get_model_ids():
+            for model_id in get_model_ids(key=key):
                 click.echo(model_id, err=True)
         else:
             click.echo("No changes", err=True)
