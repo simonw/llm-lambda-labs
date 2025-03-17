@@ -1,0 +1,71 @@
+interactions:
+- request:
+    body: '{"model": "llama3.3-70b-instruct-fp8", "messages": [{"role": "user", "content":
+      "Just replay with the word Cheese"}], "stream": true}'
+    headers:
+      accept:
+      - text/event-stream
+      accept-encoding:
+      - gzip, deflate
+      cache-control:
+      - no-store
+      connection:
+      - keep-alive
+      content-length:
+      - '133'
+      content-type:
+      - application/json
+      host:
+      - api.lambdalabs.com
+      user-agent:
+      - python-httpx/0.27.2
+    method: POST
+    uri: https://api.lambdalabs.com/v1/chat/completions
+  response:
+    body:
+      string: 'data: {"id":"chatcmpl-18774bd8-6a2d-468c-b042-b106a10b81e5","object":"chat.completion.chunk","created":1742240664,"model":"llama3.3-70b-instruct-fp8","choices":[{"index":0,"delta":{"role":"assistant"},"finish_reason":null,"content_filter_results":{"hate":{"filtered":false},"self_harm":{"filtered":false},"sexual":{"filtered":false},"violence":{"filtered":false},"jailbreak":{"filtered":false,"detected":false},"profanity":{"filtered":false,"detected":false}}}],"system_fingerprint":"","usage":{"prompt_tokens":13,"completion_tokens":1,"total_tokens":14,"prompt_tokens_details":null,"completion_tokens_details":null}}
+
+
+        data: {"id":"chatcmpl-18774bd8-6a2d-468c-b042-b106a10b81e5","object":"chat.completion.chunk","created":1742240664,"model":"llama3.3-70b-instruct-fp8","choices":[{"index":0,"delta":{"content":"Che"},"finish_reason":null,"content_filter_results":{"hate":{"filtered":false},"self_harm":{"filtered":false},"sexual":{"filtered":false},"violence":{"filtered":false},"jailbreak":{"filtered":false,"detected":false},"profanity":{"filtered":false,"detected":false}}}],"system_fingerprint":"","usage":{"prompt_tokens":13,"completion_tokens":2,"total_tokens":15,"prompt_tokens_details":null,"completion_tokens_details":null}}
+
+
+        data: {"id":"chatcmpl-18774bd8-6a2d-468c-b042-b106a10b81e5","object":"chat.completion.chunk","created":1742240664,"model":"llama3.3-70b-instruct-fp8","choices":[{"index":0,"delta":{"content":"ese"},"finish_reason":null,"content_filter_results":{"hate":{"filtered":false},"self_harm":{"filtered":false},"sexual":{"filtered":false},"violence":{"filtered":false},"jailbreak":{"filtered":false,"detected":false},"profanity":{"filtered":false,"detected":false}}}],"system_fingerprint":"","usage":{"prompt_tokens":13,"completion_tokens":3,"total_tokens":16,"prompt_tokens_details":null,"completion_tokens_details":null}}
+
+
+        data: {"id":"chatcmpl-18774bd8-6a2d-468c-b042-b106a10b81e5","object":"chat.completion.chunk","created":1742240664,"model":"llama3.3-70b-instruct-fp8","choices":[{"index":0,"delta":{},"finish_reason":"stop","content_filter_results":{"hate":{"filtered":false},"self_harm":{"filtered":false},"sexual":{"filtered":false},"violence":{"filtered":false},"jailbreak":{"filtered":false,"detected":false},"profanity":{"filtered":false,"detected":false}}}],"system_fingerprint":"","usage":{"prompt_tokens":13,"completion_tokens":4,"total_tokens":17,"prompt_tokens_details":null,"completion_tokens_details":null}}
+
+
+        data: {"id":"chatcmpl-18774bd8-6a2d-468c-b042-b106a10b81e5","object":"chat.completion.chunk","created":1742240664,"model":"llama3.3-70b-instruct-fp8","choices":[{"index":0,"delta":{},"finish_reason":null,"content_filter_results":{"hate":{"filtered":false},"self_harm":{"filtered":false},"sexual":{"filtered":false},"violence":{"filtered":false},"jailbreak":{"filtered":false,"detected":false},"profanity":{"filtered":false,"detected":false}}}],"system_fingerprint":"","usage":{"prompt_tokens":41,"completion_tokens":3,"total_tokens":44,"prompt_tokens_details":null,"completion_tokens_details":null}}
+
+
+        data: [DONE]
+
+
+        '
+    headers:
+      CF-RAY:
+      - 921efc1a8dbd69c1-LAX
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/event-stream
+      Date:
+      - Mon, 17 Mar 2025 19:44:24 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=p28JPOjqORpsWZfiQkFdwELAzauZ_GljGACRPeDjzIA-1742240664-1.0.1.1-_vaOZp_wjtHBJyTTlhqAJBDlDn6VkwjN37vso3SwfE54ftXVmE8uAerdfaZKHsrkeT9mM.vmJ7j3GqfymDvzt5_AcQD8YG9NqUBLWdkjm9g;
+        path=/; expires=Mon, 17-Mar-25 20:14:24 GMT; domain=.lambdalabs.com; HttpOnly;
+        Secure; SameSite=None
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      x-request-id:
+      - 18774bd8-6a2d-468c-b042-b106a10b81e5
+      x-response-time:
+      - '0.172'
+    status:
+      code: 200
+      message: OK
+version: 1
