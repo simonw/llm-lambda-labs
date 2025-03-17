@@ -1,6 +1,6 @@
 [project]
 name = "llm-lambda-labs"
-version = "0.1a0"
+version = "0.2"
 description = "Run prompts against LLMs hosted by https://lambdalabs.com/"
 readme = "README.md"
 authors = [{name = "Simon Willison"}]
