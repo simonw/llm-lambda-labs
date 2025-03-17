@@ -74,6 +74,13 @@ def register_commands(cli):
         else:
             click.echo("No changes", err=True)
 
+    @lambdalabs.command()
+    @click.option("--key", help="Lambda Labs API key")
+    def models(key):
+        "List available Lambda Labs models"
+        details = get_model_details(key)
+        click.echo(json.dumps(details, indent=2))
+
 
 class LambdaLabs(llm.Model):
     can_stream = True

@@ -37,6 +37,11 @@ The list of available models is fetched the first time the plugin is run. You ca
 ```bash
 llm lambdalabs refresh
 ```
+To see a list of model information that has been stored in the cache, run this:
+
+```bash
+llm lambdalabs models
+```
 
 ## Development
 
