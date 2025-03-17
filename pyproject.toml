@@ -29,4 +29,4 @@ CI = "https://github.com/simonw/llm-lambda-labs/actions"
 lambda_labs = "llm_lambda_labs"
 
 [project.optional-dependencies]
-test = ["pytest"]
+test = ["pytest", "pytest-recording"]

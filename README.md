@@ -59,3 +59,8 @@ To run the tests:
 ```bash
 python -m pytest
 ```
+
+Run this to capture new recordings of HTTP interactions for the tests:
+```bash
+PYTEST_LAMBDALABS_KEY="$(llm keys get lambdalabs)" pytest --record-mode once
+```
