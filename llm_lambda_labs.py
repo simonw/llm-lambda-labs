@@ -166,9 +166,7 @@ class LambdaLabs(_SharedLambdaLabs, llm.KeyModel):
                 ) as event_source:
                     # In case of unauthorized:
                     if event_source.response.status_code != 200:
-                        raise click.ClickException(
-                            str(event_source.response.status_code)
-                        )
+                        raise ValueError(str(event_source.response.status_code))
                     event_source.response.raise_for_status()
                     last_not_done = None
                     for sse in event_source.iter_sse():
@@ -226,9 +224,7 @@ class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncKeyModel):
                 ) as event_source:
                     # In case of unauthorized:
                     if event_source.response.status_code != 200:
-                        raise click.ClickException(
-                            str(event_source.response.status_code)
-                        )
+                        raise ValueError(str(event_source.response.status_code))
                     event_source.response.raise_for_status()
                     last_not_done = None
                     async for sse in event_source.aiter_sse():
