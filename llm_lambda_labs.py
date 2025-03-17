@@ -143,9 +143,8 @@ class _SharedLambdaLabs:
             )
 
 
-class LambdaLabs(_SharedLambdaLabs, llm.Model):
-    def execute(self, prompt, stream, response, conversation):
-        key = self.get_key()
+class LambdaLabs(_SharedLambdaLabs, llm.KeyModel):
+    def execute(self, prompt, stream, response, conversation, key=None):
         messages = self.build_messages(prompt, conversation)
         response._prompt_json = {"messages": messages}
         body = self.build_request_body(prompt, conversation)
@@ -168,7 +167,7 @@ class LambdaLabs(_SharedLambdaLabs, llm.Model):
                     # In case of unauthorized:
                     if event_source.response.status_code != 200:
                         raise click.ClickException(
-                            f"{event_source.response.status_code}: {event_source.response.text}"
+                            str(event_source.response.status_code)
                         )
                     event_source.response.raise_for_status()
                     last_not_done = None
@@ -204,9 +203,8 @@ class LambdaLabs(_SharedLambdaLabs, llm.Model):
                 response.response_json = details
 
 
-class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncModel):
-    async def execute(self, prompt, stream, response, conversation):
-        key = self.get_key()
+class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncKeyModel):
+    async def execute(self, prompt, stream, response, conversation, key=None):
         messages = self.build_messages(prompt, conversation)
         response._prompt_json = {"messages": messages}
         body = self.build_request_body(prompt, conversation)
@@ -229,7 +227,7 @@ class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncModel):
                     # In case of unauthorized:
                     if event_source.response.status_code != 200:
                         raise click.ClickException(
-                            f"{event_source.response.status_code}: {event_source.response.text}"
+                            str(event_source.response.status_code)
                         )
                     event_source.response.raise_for_status()
                     last_not_done = None
