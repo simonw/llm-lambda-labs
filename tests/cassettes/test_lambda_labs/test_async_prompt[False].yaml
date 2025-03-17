@@ -1,0 +1,60 @@
+interactions:
+- request:
+    body: '{"model": "llama3.3-70b-instruct-fp8", "messages": [{"role": "user", "content":
+      "hi"}]}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '87'
+      content-type:
+      - application/json
+      host:
+      - api.lambdalabs.com
+      user-agent:
+      - python-httpx/0.27.2
+    method: POST
+    uri: https://api.lambdalabs.com/v1/chat/completions
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA4xRy27bMBD8FWIvvVCBLKm2w0uuzTcUhUCTS4nxiiuQqzqG4X8v5DZpAzhAr/NY
+        DmcuED0YcKMVN81U7fbetQ63VVNjW3Xbuqus6x6r1od92DbOH4IFDXx4QSd/jA+Op5lQIifQ4DJa
+        QQ9ms+uapqs3dadhYo8EBojsZNuHttrVhyqmInlxUoV5vxpHjg4LmO8XiMnjK5haw4Sl2AHBXCAz
+        IRiwpcQiNsnq4SSY1iDf+PSlqChq4JiGJ/VclIyYURWeUMaYBvWsnE1qRJrVmRd1ijIqzurEC/kb
+        QvGISlitn3qCq4YQUyxjn9EWTmCgCM9/X+1DJMHcZywLSVkjjlZuUX8zawvBUsGrhoIU+tHm6TP6
+        dbF0n/sZmTC5Tw6/2EiHjPZ4h9bgUdDJv/o5c7Apyvm/9NfrDw3L2wJz5mmWXviIqYBpt2sXb9u/
+        w81Gg7BYeke+7vRHb+9RbKQCJi1Ed658FKwFnYvg1IeYBsxzjrfR4foLAAD//wMAQwZRoMACAAA=
+    headers:
+      CF-RAY:
+      - 921eee6d6f9df7d7-LAX
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json
+      Date:
+      - Mon, 17 Mar 2025 19:35:05 GMT
+      Server:
+      - cloudflare
+      Set-Cookie:
+      - __cf_bm=WpvMGgxhve7YS7fMgxtg_Ha5qYNozZNgYIXb1E7fWhw-1742240105-1.0.1.1-SzOnqHalWbkKzqO25.rRwI7A.80Pds7iW5XoOzFdvHXGpQ7q43msCsDVOdUVBf541QRqmoTcHOthBhaA7sXa2Yme9ClsviOzYWlhIoxdRJA;
+        path=/; expires=Mon, 17-Mar-25 20:05:05 GMT; domain=.lambdalabs.com; HttpOnly;
+        Secure; SameSite=None
+      Transfer-Encoding:
+      - chunked
+      cf-cache-status:
+      - DYNAMIC
+      x-request-id:
+      - 78dc3ce6-20e3-4604-ac49-3df8f62cdbfa
+      x-response-time:
+      - '0.675'
+    status:
+      code: 200
+      message: OK
+version: 1

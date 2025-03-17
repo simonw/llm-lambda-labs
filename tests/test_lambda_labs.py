@@ -39,3 +39,15 @@ def test_prompt(patched):
         output
         == "It's nice to meet you. Is there something I can help you with or would you like to chat?"
     )
+
+
+@pytest.mark.vcr
+@pytest.mark.asyncio
+@pytest.mark.parametrize("stream", (True, False))
+async def test_async_prompt(patched, stream):
+    model = llm.get_async_model("lambdalabs/llama3.3-70b-instruct-fp8")
+    output = await model.prompt("hi", stream=stream).text()
+    assert (
+        output
+        == "How's it going? Is there something I can help you with or would you like to chat?"
+    )

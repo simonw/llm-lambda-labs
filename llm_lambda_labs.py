@@ -1,5 +1,5 @@
 import click
-from httpx_sse import connect_sse
+from httpx_sse import connect_sse, aconnect_sse
 import httpx
 import json
 import llm
@@ -41,7 +41,9 @@ def register_models(register):
     for model in get_model_details():
         model_id = model["id"]
         our_model_id = "lambdalabs/" + model_id
-        register(LambdaLabs(our_model_id, model_id))
+        register(
+            LambdaLabs(our_model_id, model_id), AsyncLambdaLabs(our_model_id, model_id)
+        )
 
 
 def get_model_ids(key):
@@ -82,7 +84,7 @@ def register_commands(cli):
         click.echo(json.dumps(details, indent=2))
 
 
-class LambdaLabs(llm.Model):
+class _SharedLambdaLabs:
     can_stream = True
     needs_key = "lambdalabs"
     key_env_var = "LLM_LAMBDALABS_KEY"
@@ -123,16 +125,24 @@ class LambdaLabs(llm.Model):
         messages.append(latest_message)
         return messages
 
-    def execute(self, prompt, stream, response, conversation):
-        key = self.get_key()
+    def build_request_body(self, prompt, conversation):
         messages = self.build_messages(prompt, conversation)
-        response._prompt_json = {"messages": messages}
         body = {
             "model": self.lambda_labs_id,
             "messages": messages,
         }
         if prompt.options.max_tokens:
             body["max_tokens"] = prompt.options.max_tokens
+        return body
+
+
+class LambdaLabs(_SharedLambdaLabs, llm.Model):
+    def execute(self, prompt, stream, response, conversation):
+        key = self.get_key()
+        messages = self.build_messages(prompt, conversation)
+        response._prompt_json = {"messages": messages}
+        body = self.build_request_body(prompt, conversation)
+
         if stream:
             body["stream"] = True
             with httpx.Client() as client:
@@ -151,7 +161,7 @@ class LambdaLabs(llm.Model):
                     # In case of unauthorized:
                     if event_source.response.status_code != 200:
                         raise click.ClickException(
-                            f"{event_source.response.status_code}: {type} - {event_source.response.text}"
+                            f"{event_source.response.status_code}: {event_source.response.text}"
                         )
                     event_source.response.raise_for_status()
                     last_not_done = None
@@ -164,8 +174,9 @@ class LambdaLabs(llm.Model):
                             except KeyError:
                                 pass
                     # Record last_not_done as response_json - it includes usage
-                    last_not_done.pop("choices", None)
-                    response.response_json = last_not_done
+                    if last_not_done:
+                        last_not_done.pop("choices", None)
+                        response.response_json = last_not_done
         else:
             with httpx.Client() as client:
                 api_response = client.post(
@@ -181,3 +192,62 @@ class LambdaLabs(llm.Model):
                 api_response.raise_for_status()
                 yield api_response.json()["choices"][0]["message"]["content"]
                 response.response_json = api_response.json()
+
+
+class AsyncLambdaLabs(_SharedLambdaLabs, llm.AsyncModel):
+    async def execute(self, prompt, stream, response, conversation):
+        key = self.get_key()
+        messages = self.build_messages(prompt, conversation)
+        response._prompt_json = {"messages": messages}
+        body = self.build_request_body(prompt, conversation)
+
+        if stream:
+            body["stream"] = True
+            async with httpx.AsyncClient() as client:
+                async with aconnect_sse(
+                    client,
+                    "POST",
+                    "https://api.lambdalabs.com/v1/chat/completions",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": f"Bearer {key}",
+                    },
+                    json=body,
+                    timeout=None,
+                ) as event_source:
+                    # In case of unauthorized:
+                    if event_source.response.status_code != 200:
+                        raise click.ClickException(
+                            f"{event_source.response.status_code}: {event_source.response.text}"
+                        )
+                    event_source.response.raise_for_status()
+                    last_not_done = None
+                    async for sse in event_source.aiter_sse():
+                        if sse.data != "[DONE]":
+                            try:
+                                data = sse.json()
+                                last_not_done = data
+                                yield data["choices"][0]["delta"]["content"]
+                            except KeyError:
+                                pass
+                    # Record last_not_done as response_json - it includes usage
+                    if last_not_done:
+                        last_not_done.pop("choices", None)
+                        response.response_json = last_not_done
+        else:
+            async with httpx.AsyncClient() as client:
+                api_response = await client.post(
+                    "https://api.lambdalabs.com/v1/chat/completions",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": f"Bearer {key}",
+                    },
+                    json=body,
+                    timeout=None,
+                )
+                api_response.raise_for_status()
+                response_json = api_response.json()
+                yield response_json["choices"][0]["message"]["content"]
+                response.response_json = response_json
